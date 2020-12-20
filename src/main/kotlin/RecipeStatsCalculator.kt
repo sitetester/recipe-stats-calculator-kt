@@ -4,7 +4,7 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
 
-class RecipeStatsCalculator {
+class RecipeStatsCalculator(private val customPostcodeDeliveryTime: CustomPostcodeDeliveryTime) {
 
     // https://www.acuriousanimal.com/blog/2015/10/23/reading-json-file-in-stream-mode-with-gson
     // https://sites.google.com/site/gson/streaming
@@ -14,22 +14,58 @@ class RecipeStatsCalculator {
         val inputStream: InputStream = FileInputStream(filePath)
         val reader = JsonReader(InputStreamReader(inputStream, "UTF-8"))
 
+        val countPerRecipe: MutableMap<String, Int> = mutableMapOf()
+        val countPerPostcode: MutableMap<String, Int> = mutableMapOf()
+        val deliveriesCountPerPostcode: MutableMap<String, Int> = mutableMapOf()
+
         reader.beginArray()
         while (reader.hasNext()) {
             val recipeData = Gson().fromJson<RecipeData>(reader, RecipeData::class.java)
-            println(recipeData)
+
+            calculateCountPer(recipeData.recipe, countPerRecipe)
+            calculateCountPer(recipeData.postcode, countPerPostcode)
+            calculateDeliveriesCountPerPostcode(recipeData, deliveriesCountPerPostcode)
         }
 
-        return ExpectedOutput(uniqueRecipeCount = 0)
+        return ExpectedOutputProvider(countPerRecipe).getExpectedOutput()
+    }
+
+    private fun calculateCountPer(key: String, countPer: MutableMap<String, Int>) {
+
+        val count = countPer[key]
+
+        if (count != null) {
+            countPer[key] = count + 1
+        } else {
+            countPer[key] = 1
+        }
+    }
+
+    private fun calculateDeliveriesCountPerPostcode(
+        recipeData: RecipeData,
+        deliveriesCountPerPostcode: MutableMap<String, Int>
+    ) {
+        if (recipeData.postcode == this.customPostcodeDeliveryTime.postcode && isWithinDeliveryTime(recipeData.delivery)) {
+            calculateCountPer(recipeData.postcode, deliveriesCountPerPostcode)
+        }
+    }
+
+    private fun isWithinDeliveryTime(delivery: String): Boolean {
+
+        val match = Regex("(\\d{0,2})AM\\s-\\s(\\d{0,2})PM").find(delivery)!!
+        val (from, to) = match.destructured
+
+        return from.toInt() >= this.customPostcodeDeliveryTime.from && to.toInt() <= this.customPostcodeDeliveryTime.to
     }
 }
+
 
 data class RecipeData(val postcode: String, val recipe: String, val delivery: String)
 
 data class CustomPostcodeDeliveryTime(
     val postcode: String,
-    val From: Int,
-    val To: Int
+    val from: Int,
+    val to: Int
 )
 
 data class ExpectedOutput(
