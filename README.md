@@ -30,6 +30,19 @@ Functional Requirements
    - Veggie
    - Mushroom
 
+Non-functional Requirements
+--------
+
+1. The application is packaged with [Docker](https://www.docker.com/).
+2. Setup scripts are provided.
+3. The submission is provided as a `CLI` application.
+4. The expected output is rendered to `stdout`. Make sure to render only the final `json`. If you need to print
+   additional info or debug, pipe it to `stderr`.
+5. It should be possible to (implementation is up to you):  
+   a. provide a custom fixtures file as input  
+   b. provide custom recipe names to search by (functional reqs. 5)  
+   c. provide custom postcode and time window for search (functional reqs. 4)
+
 Expected output
 ---------------
 
@@ -37,34 +50,34 @@ Generate a JSON file of the following format:
 
 ```json5
 {
-    "unique_recipe_count": 15,
-    "count_per_recipe": [
-        {
-            "recipe": "Mediterranean Baked Veggies",
-            "count": 1
-        },
-        {
-            "recipe": "Speedy Steak Fajitas",
-            "count": 1
-        },
-        {
-            "recipe": "Tex-Mex Tilapia",
-            "count": 3
-        }
-    ],
-    "busiest_postcode": {
-        "postcode": "10120",
-        "delivery_count": 1000
-    },
-    "count_per_postcode_and_time": {
-        "postcode": "10120",
-        "from": "11AM",
-        "to": "3PM",
-        "delivery_count": 500
-    },
-    "match_by_name": [
-        "Mediterranean Baked Veggies", "Speedy Steak Fajitas", "Tex-Mex Tilapia"
-    ]
+   "unique_recipe_count": 15,
+   "count_per_recipe": [
+      {
+         "recipe": "Mediterranean Baked Veggies",
+         "count": 1
+      },
+      {
+         "recipe": "Speedy Steak Fajitas",
+         "count": 1
+      },
+      {
+         "recipe": "Tex-Mex Tilapia",
+         "count": 3
+      }
+   ],
+   "busiest_postcode": {
+      "postcode": "10120",
+      "delivery_count": 1000
+   },
+   "count_per_postcode_and_time": {
+      "postcode": "10120",
+      "from": "11AM",
+      "to": "3PM",
+      "delivery_count": 500
+   },
+   "match_by_name": [
+      "Mediterranean Baked Veggies", "Speedy Steak Fajitas", "Tex-Mex Tilapia"
+   ]
 }
 ```
 

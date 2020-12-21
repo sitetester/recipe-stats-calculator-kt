@@ -1,4 +1,5 @@
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import com.google.gson.stream.JsonReader
 import java.io.FileInputStream
 import java.io.InputStream
@@ -95,12 +96,12 @@ data class CustomPostcodeDeliveryTime(
 )
 
 data class ExpectedOutput(
-    val uniqueRecipeCount: Int,
-    val sortedRecipesCount: List<CountPerRecipe>,
-    val busiestPostcode: BusiestPostcode,
-    val countPerPostcodeAndTime: CountPerPostcodeAndTime,
+    @SerializedName("unique_recipe_count") val uniqueRecipeCount: Int,
+    @SerializedName("count_per_recipe") val sortedRecipesCount: List<CountPerRecipe>,
+    @SerializedName("busiest_postcode") val busiestPostcode: BusiestPostcode,
+    @SerializedName("count_per_postcode_and_time") val countPerPostcodeAndTime: CountPerPostcodeAndTime,
     // https://stackoverflow.com/questions/57249356/kotlin-array-property-in-data-class-error
-    val filteredRecipeNames: List<String>
+    @SerializedName("match_by_name") val filteredRecipeNames: List<String>
 )
 
 data class CountPerRecipe(
@@ -110,17 +111,13 @@ data class CountPerRecipe(
 
 data class BusiestPostcode(
     val postcode: String,
-    val deliveryCount: Int,
+    @SerializedName("delivery_count") val deliveryCount: Int,
 )
 
 data class CountPerPostcodeAndTime(
     val postcode: String,
     val fromAM: Int,
     val toPM: Int,
-    val deliveryCount: Int?,
+    @SerializedName("delivery_count") val deliveryCount: Int?,
 )
 
-data class CountPerPostcode(
-    val postcode: String,
-    val count: Int,
-)
