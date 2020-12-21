@@ -16,7 +16,10 @@ class RecipeStatsCalculatorTest {
 
         val customPostcodeDeliveryTime = CustomPostcodeDeliveryTime("10120", 10, 3)
         expectedOutput =
-            RecipeStatsCalculator(customPostcodeDeliveryTime, mutableListOf("Fajitas", "Balsamic")).calculateStats(path)
+            RecipeStatsCalculator(
+                customPostcodeDeliveryTime,
+                mutableListOf("Potato", "Veggie", "Mushroom")
+            ).calculateStats(path)
     }
 
     @Test
@@ -49,11 +52,10 @@ class RecipeStatsCalculatorTest {
     }
 
     @Test
-    fun `List the recipe names (alphabetically ordered) that contain in their name one of the following words`() {
+    fun `List the recipe names (alphabetically ordered) that contain in their name one of the words (Potato, Veggie, Mushroom)`() {
         val filteredRecipeNames: MutableList<String> = mutableListOf(
             "A5 Balsamic Veggie Chops",
             "Balsamic Potato Pork Chops",
-            "Cherry Balsamic Pork Chops",
             "Speedy Steak Mushroom Fajitas"
         )
         assertEquals(filteredRecipeNames, expectedOutput.filteredRecipeNames)
