@@ -20,7 +20,7 @@ class RecipeStatsCalculatorTest {
 
     @Test
     fun `Count the number of unique recipe names`() {
-        assertEquals(expectedOutput.uniqueRecipeCount, 4)
+        assertEquals(4, expectedOutput.uniqueRecipeCount)
     }
 
     @Test
@@ -28,18 +28,23 @@ class RecipeStatsCalculatorTest {
         val sortedRecipesCount = expectedOutput.sortedRecipesCount
 
         // first recipe in sorted order
-        assertEquals(sortedRecipesCount[0], CountPerRecipe("A5 Balsamic Veggie Chops", 1))
+        assertEquals(CountPerRecipe("A5 Balsamic Veggie Chops", 1), sortedRecipesCount[0])
 
         // it should cover all recipes
-        assertEquals(sortedRecipesCount.size, 5)
+        assertEquals(5, sortedRecipesCount.size)
 
         // `Creamy Dill Chicken` has two counts
-        assertEquals(sortedRecipesCount[3], CountPerRecipe("Creamy Dill Chicken", 2))
+        assertEquals(CountPerRecipe("Creamy Dill Chicken", 2), sortedRecipesCount[3])
     }
 
     @Test
     fun `Find the postcode with most delivered recipes`() {
-        assertEquals(expectedOutput.busiestPostcode, BusiestPostcode("10120", 3))
+        assertEquals(BusiestPostcode("10120", 3), expectedOutput.busiestPostcode)
+    }
+
+    @Test
+    fun `Count the number of deliveries to postcode 10120 that lie within the delivery time between 10AM and 3PM`() {
+        assertEquals(CountPerPostcodeAndTime("10120", 10, 3, 2), expectedOutput.countPerPostcodeAndTime)
     }
 
 }

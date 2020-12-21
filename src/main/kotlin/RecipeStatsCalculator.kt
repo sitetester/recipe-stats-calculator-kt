@@ -27,7 +27,19 @@ class RecipeStatsCalculator(private val customPostcodeDeliveryTime: CustomPostco
             calculateDeliveriesCountPerPostcode(recipeData, deliveriesCountPerPostcode)
         }
 
-        return ExpectedOutputProvider(countPerRecipe, countPerPostcode).getExpectedOutput()
+        val expectedOutputProvider = ExpectedOutputProvider()
+
+        return ExpectedOutput(
+            uniqueRecipeCount = expectedOutputProvider.getUniqueRecipeCount(countPerRecipe),
+            sortedRecipesCount = expectedOutputProvider.getSortedRecipeCount(countPerRecipe),
+            busiestPostcode = expectedOutputProvider.getBusiestPostcode(countPerPostcode),
+            countPerPostcodeAndTime = CountPerPostcodeAndTime(
+                customPostcodeDeliveryTime.postcode,
+                customPostcodeDeliveryTime.from,
+                customPostcodeDeliveryTime.to,
+                deliveriesCountPerPostcode[customPostcodeDeliveryTime.postcode]
+            )
+        )
     }
 
     private fun calculateCountPer(key: String, countPer: MutableMap<String, Int>) {
@@ -68,11 +80,11 @@ data class CustomPostcodeDeliveryTime(
 )
 
 data class ExpectedOutput(
-    val uniqueRecipeCount: Int,
+    var uniqueRecipeCount: Int,
     val sortedRecipesCount: List<CountPerRecipe>,
     val busiestPostcode: BusiestPostcode,
-    /*
     val countPerPostcodeAndTime: CountPerPostcodeAndTime,
+    /*
     // https://stackoverflow.com/questions/57249356/kotlin-array-property-in-data-class-error
     val sortedRecipeNames: List<String> = listOf()*/
 )
@@ -89,9 +101,9 @@ data class BusiestPostcode(
 
 data class CountPerPostcodeAndTime(
     val postcode: String,
-    val fromAM: String,
-    val toPM: String,
-    val deliveryCount: Int,
+    val fromAM: Int,
+    val toPM: Int,
+    val deliveryCount: Int?,
 )
 
 data class CountPerPostcode(
