@@ -21,4 +21,19 @@ class RecipeStatsCalculatorTest {
     fun `Count the number of unique recipe names`() {
         assert(expectedOutput.uniqueRecipeCount == 4)
     }
+
+    @Test
+    fun `Count the number of occurrences for each unique recipe name (alphabetically ordered by recipe name`() {
+        val sortedRecipesCount = expectedOutput.sortedRecipesCount
+
+        // first recipe in sorted order
+        assert(sortedRecipesCount[0] == CountPerRecipe("A5 Balsamic Veggie Chops", 1))
+
+        // it should cover all recipes
+        assert(sortedRecipesCount.size == 5)
+
+        // `Creamy Dill Chicken` has two counts
+        assert(sortedRecipesCount[3] == CountPerRecipe("Creamy Dill Chicken", 2))
+    }
+
 }

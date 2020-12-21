@@ -59,7 +59,6 @@ class RecipeStatsCalculator(private val customPostcodeDeliveryTime: CustomPostco
     }
 }
 
-
 data class RecipeData(val postcode: String, val recipe: String, val delivery: String)
 
 data class CustomPostcodeDeliveryTime(
@@ -70,7 +69,8 @@ data class CustomPostcodeDeliveryTime(
 
 data class ExpectedOutput(
     val uniqueRecipeCount: Int,
-    /*val sortedRecipesCount: List<CountPerRecipe>,
+    val sortedRecipesCount: List<CountPerRecipe>,
+    /*
     val busiestPostcode: BusiestPostcode,
     val countPerPostcodeAndTime: CountPerPostcodeAndTime,
     // https://stackoverflow.com/questions/57249356/kotlin-array-property-in-data-class-error
