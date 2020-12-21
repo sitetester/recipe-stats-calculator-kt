@@ -15,7 +15,8 @@ class RecipeStatsCalculatorTest {
         val path = File(ClassLoader.getSystemResource(name).file).absolutePath
 
         val customPostcodeDeliveryTime = CustomPostcodeDeliveryTime("10120", 10, 3)
-        expectedOutput = RecipeStatsCalculator(customPostcodeDeliveryTime).calculateStats(path)
+        expectedOutput =
+            RecipeStatsCalculator(customPostcodeDeliveryTime, mutableListOf("Fajitas", "Balsamic")).calculateStats(path)
     }
 
     @Test
@@ -47,4 +48,14 @@ class RecipeStatsCalculatorTest {
         assertEquals(CountPerPostcodeAndTime("10120", 10, 3, 2), expectedOutput.countPerPostcodeAndTime)
     }
 
+    @Test
+    fun `List the recipe names (alphabetically ordered) that contain in their name one of the following words`() {
+        val filteredRecipeNames: MutableList<String> = mutableListOf(
+            "A5 Balsamic Veggie Chops",
+            "Balsamic Potato Pork Chops",
+            "Cherry Balsamic Pork Chops",
+            "Speedy Steak Mushroom Fajitas"
+        )
+        assertEquals(filteredRecipeNames, expectedOutput.filteredRecipeNames)
+    }
 }

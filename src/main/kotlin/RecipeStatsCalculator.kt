@@ -4,7 +4,10 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
 
-class RecipeStatsCalculator(private val customPostcodeDeliveryTime: CustomPostcodeDeliveryTime) {
+class RecipeStatsCalculator(
+    private val customPostcodeDeliveryTime: CustomPostcodeDeliveryTime,
+    private val customWords: List<String> = listOf()
+) {
 
     // https://www.acuriousanimal.com/blog/2015/10/23/reading-json-file-in-stream-mode-with-gson
     // https://sites.google.com/site/gson/streaming
@@ -17,6 +20,7 @@ class RecipeStatsCalculator(private val customPostcodeDeliveryTime: CustomPostco
         val countPerRecipe: MutableMap<String, Int> = mutableMapOf()
         val countPerPostcode: MutableMap<String, Int> = mutableMapOf()
         val deliveriesCountPerPostcode: MutableMap<String, Int> = mutableMapOf()
+        val filteredRecipeNames: MutableList<String> = mutableListOf()
 
         reader.beginArray()
         while (reader.hasNext()) {
@@ -25,6 +29,7 @@ class RecipeStatsCalculator(private val customPostcodeDeliveryTime: CustomPostco
             calculateCountPer(recipeData.recipe, countPerRecipe)
             calculateCountPer(recipeData.postcode, countPerPostcode)
             calculateDeliveriesCountPerPostcode(recipeData, deliveriesCountPerPostcode)
+            filterRecipeNameByCustomWords(recipeData.recipe, filteredRecipeNames)
         }
 
         val expectedOutputProvider = ExpectedOutputProvider()
@@ -38,8 +43,18 @@ class RecipeStatsCalculator(private val customPostcodeDeliveryTime: CustomPostco
                 customPostcodeDeliveryTime.from,
                 customPostcodeDeliveryTime.to,
                 deliveriesCountPerPostcode[customPostcodeDeliveryTime.postcode]
-            )
+            ),
+            filteredRecipeNames = filteredRecipeNames.sorted()
         )
+    }
+
+    private fun filterRecipeNameByCustomWords(recipe: String, filteredRecipeNames: MutableList<String>) {
+
+        customWords.forEach { customWord ->
+            if (recipe.contains(customWord, true) && !filteredRecipeNames.contains(recipe)) {
+                filteredRecipeNames.add(recipe)
+            }
+        }
     }
 
     private fun calculateCountPer(key: String, countPer: MutableMap<String, Int>) {
@@ -84,9 +99,8 @@ data class ExpectedOutput(
     val sortedRecipesCount: List<CountPerRecipe>,
     val busiestPostcode: BusiestPostcode,
     val countPerPostcodeAndTime: CountPerPostcodeAndTime,
-    /*
     // https://stackoverflow.com/questions/57249356/kotlin-array-property-in-data-class-error
-    val sortedRecipeNames: List<String> = listOf()*/
+    val filteredRecipeNames: List<String>
 )
 
 data class CountPerRecipe(
