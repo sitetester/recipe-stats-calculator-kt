@@ -2,6 +2,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
 import java.io.File
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RecipeStatsCalculatorTest {
@@ -19,7 +20,7 @@ class RecipeStatsCalculatorTest {
 
     @Test
     fun `Count the number of unique recipe names`() {
-        assert(expectedOutput.uniqueRecipeCount == 4)
+        assertEquals(expectedOutput.uniqueRecipeCount, 4)
     }
 
     @Test
@@ -27,13 +28,18 @@ class RecipeStatsCalculatorTest {
         val sortedRecipesCount = expectedOutput.sortedRecipesCount
 
         // first recipe in sorted order
-        assert(sortedRecipesCount[0] == CountPerRecipe("A5 Balsamic Veggie Chops", 1))
+        assertEquals(sortedRecipesCount[0], CountPerRecipe("A5 Balsamic Veggie Chops", 1))
 
         // it should cover all recipes
-        assert(sortedRecipesCount.size == 5)
+        assertEquals(sortedRecipesCount.size, 5)
 
         // `Creamy Dill Chicken` has two counts
-        assert(sortedRecipesCount[3] == CountPerRecipe("Creamy Dill Chicken", 2))
+        assertEquals(sortedRecipesCount[3], CountPerRecipe("Creamy Dill Chicken", 2))
+    }
+
+    @Test
+    fun `Find the postcode with most delivered recipes`() {
+        assertEquals(expectedOutput.busiestPostcode, BusiestPostcode("10120", 3))
     }
 
 }
