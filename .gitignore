@@ -1,3 +1,4 @@
 .idea
 .gradle
 build
+/src/test/resources/hf_test_calculation_fixtures.json
