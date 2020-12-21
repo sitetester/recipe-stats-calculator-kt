@@ -80,7 +80,7 @@ data class CustomPostcodeDeliveryTime(
 )
 
 data class ExpectedOutput(
-    var uniqueRecipeCount: Int,
+    val uniqueRecipeCount: Int,
     val sortedRecipesCount: List<CountPerRecipe>,
     val busiestPostcode: BusiestPostcode,
     val countPerPostcodeAndTime: CountPerPostcodeAndTime,
