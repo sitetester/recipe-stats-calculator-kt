@@ -18,7 +18,7 @@ class RecipeStatsCalculatorTest {
         expectedOutput =
             RecipeStatsCalculator(
                 customPostcodeDeliveryTime,
-                mutableListOf("Potato", "Veggie", "Mushroom")
+                listOf("Potato", "Veggie", "Mushroom")
             ).calculateStats(path)
     }
 
