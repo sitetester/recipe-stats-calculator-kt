@@ -33,12 +33,10 @@ class RecipeStatsCalculator(
             filterRecipeNameByCustomWords(recipeData.recipe, filteredRecipeNames)
         }
 
-        val expectedOutputProvider = ExpectedOutputProvider()
-
         return ExpectedOutput(
-            uniqueRecipeCount = expectedOutputProvider.getUniqueRecipeCount(countPerRecipe),
-            sortedRecipesCount = expectedOutputProvider.getSortedRecipeCount(countPerRecipe),
-            busiestPostcode = expectedOutputProvider.getBusiestPostcode(countPerPostcode),
+            uniqueRecipeCount = getUniqueRecipeCount(countPerRecipe),
+            sortedRecipesCount = getSortedRecipeCount(countPerRecipe),
+            busiestPostcode = getBusiestPostcode(countPerPostcode),
             countPerPostcodeAndTime = CountPerPostcodeAndTime(
                 customPostcodeDeliveryTime.postcode,
                 customPostcodeDeliveryTime.from,
@@ -47,6 +45,27 @@ class RecipeStatsCalculator(
             ),
             filteredRecipeNames = filteredRecipeNames.sorted()
         )
+    }
+
+    // counts the number of unique recipe names
+    private fun getUniqueRecipeCount(countPerRecipe: MutableMap<String, Int>): Int {
+
+        return countPerRecipe.filter { it.value == 1 }.count()
+    }
+
+    // counts the number of occurrences for each unique recipe name (alphabetically ordered by recipe name)
+    private fun getSortedRecipeCount(countPerRecipe: MutableMap<String, Int>): List<CountPerRecipe> {
+
+        return countPerRecipe.toSortedMap().map {
+            CountPerRecipe(it.key, it.value)
+        }
+    }
+
+    // finds the postcode with most delivered recipes
+    private fun getBusiestPostcode(countPerPostcode: MutableMap<String, Int>): BusiestPostcode {
+
+        val lastPair = countPerPostcode.toList().maxByOrNull { (_, value) -> value }!!
+        return BusiestPostcode(lastPair.first, lastPair.second)
     }
 
     private fun filterRecipeNameByCustomWords(recipe: String, filteredRecipeNames: MutableList<String>) {
